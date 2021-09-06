@@ -1,0 +1,108 @@
+{ "frames": [
+   {
+    "filename": "0",
+    "frame": { "x": 370, "y": 1, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "1",
+    "frame": { "x": 739, "y": 1, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "2",
+    "frame": { "x": 370, "y": 189, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "3",
+    "frame": { "x": 739, "y": 189, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "4",
+    "frame": { "x": 1, "y": 1, "w": 368, "h": 192 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 25, "w": 366, "h": 190 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "5",
+    "frame": { "x": 1, "y": 194, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "6",
+    "frame": { "x": 370, "y": 377, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "7",
+    "frame": { "x": 739, "y": 377, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "8",
+    "frame": { "x": 1, "y": 382, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   },
+   {
+    "filename": "9",
+    "frame": { "x": 370, "y": 565, "w": 368, "h": 187 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 49, "y": 30, "w": 366, "h": 185 },
+    "sourceSize": { "w": 480, "h": 270 },
+    "duration": 500
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.25",
+  "image": "tutorial_gun.png",
+  "format": "RGBA8888",
+  "size": { "w": 1107, "h": 752 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Unlock", "from": 0, "to": 2, "direction": "forward" },
+   { "name": "Open", "from": 2, "to": 4, "direction": "forward" },
+   { "name": "Load", "from": 4, "to": 6, "direction": "forward" },
+   { "name": "Close", "from": 6, "to": 8, "direction": "forward" },
+   { "name": "Lock", "from": 8, "to": 9, "direction": "forward" }
+  ]
+ }
+}

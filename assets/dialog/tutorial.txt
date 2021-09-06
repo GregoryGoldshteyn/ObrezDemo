@@ -1,0 +1,20 @@
+Press [key] to unlock the bolt
+Нажмите [key], чтобы разблокировать затвор
+
+Press [key] to open the bolt
+Нажмите [key], чтобы открыть затвор
+
+This ejects the cartridge. Load a new cartridge by pressing [key]
+Это выбросит патронов. Загрузите новый патронов, нажав [key]
+
+The magazine holds 5 rounds. Load a new cartridge by pressing [key]
+Магазин вмещает 5 патронов. Загрузите новый патронов, нажав [key]
+
+Press [key] to close the bolt
+Нажмите [key], чтобы закрыть затвор
+
+Press [key] to lock the bolt
+Нажмите [key], чтобы заблокировать затвор
+
+Press [key] to shoot
+Нажмите [key], чтобы стрелять
