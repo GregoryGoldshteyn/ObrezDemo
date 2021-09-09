@@ -18,27 +18,9 @@ var Obrez;
     var Game = /** @class */ (function (_super) {
         __extends(Game, _super);
         function Game() {
-            var _this = this;
-            // Config for the game
-            var config = {
-                type: Phaser.WEBGL,
-                width: 960,
-                height: 540,
-                parent: 'game-div',
-                pixelArt: true,
-                physics: {
-                    default: 'arcade',
-                    arcade: {
-                        gravity: { y: 0 },
-                        debug: false,
-                        debugShowBody: true,
-                        debugShowStaticBody: true
-                    }
-                },
-                scene: [GameScene.MainMenu, GameScene.Tutorial]
-            };
+            var _this = 
             // Init using config
-            _this = _super.call(this, config) || this;
+            _super.call(this, Constants.GAME_CONFIG) || this;
             _this.scene.start("TutorialScene");
             return _this;
         }
@@ -114,24 +96,26 @@ var GameScene;
             // Load sprites
             this.load.path = Constants.SPRITE_ASSET_PATH;
             this.load.aseprite(Constants.TUTORIAL_GUN_TAG, Constants.TUTORIAL_GUN_IMG_FILE, Constants.TUTORIAL_GUN_JSON_FILE);
+            this.load.image(Constants.TUTORIAL_ROUND_TAG, Constants.TUTORIAL_ROUND_IMG_FILE);
+            this.load.image(Constants.TUTORIAL_EMPTY_ROUND_TAG, Constants.TUTORIAL_EMPTY_ROUND_IMG_FILE);
         };
         Tutorial.prototype.create = function () {
-            var tags = this.anims.createFromAseprite(Constants.TUTORIAL_GUN_TAG);
+            this.anims.createFromAseprite(Constants.TUTORIAL_GUN_TAG);
             var gun_sprite = this.add.sprite(this.gameWidth / 2, this.gameHeight / 2, Constants.TUTORIAL_GUN_TAG);
+            var round_load_emitter = this.add.particles(Constants.TUTORIAL_ROUND_TAG);
+            var empty_round_emitter = this.add.particles(Constants.TUTORIAL_EMPTY_ROUND_TAG);
+            var round_removal_emitter = this.add.particles(Constants.TUTORIAL_ROUND_TAG);
             this.sound.add(Constants.UNLOCK_TAG);
             this.sound.add(Constants.OPEN_TAG);
             this.sound.add(Constants.LOAD_TAG);
             this.sound.add(Constants.CLOSE_TAG);
             this.sound.add(Constants.LOCK_TAG);
             this.sound.add(Constants.FIRE_TAG);
-            var gun_object = new Util.BoltGun(gun_sprite, this.sound);
+            var gun_object = new Util.BoltGun(gun_sprite, round_load_emitter, empty_round_emitter, round_removal_emitter, this.sound);
             this.input.keyboard.on('keydown', function (event) {
-                console.log(gun_object);
                 gun_object.HandleKeyEvent(event.key.toUpperCase());
             });
             this.cameras.main.backgroundColor = Phaser.Display.Color.ValueToColor(0x808080);
-        };
-        Tutorial.prototype.update = function () {
         };
         return Tutorial;
     }(GameScene.SceneBase));
@@ -140,12 +124,15 @@ var GameScene;
 var Util;
 (function (Util) {
     var BoltGun = /** @class */ (function () {
-        function BoltGun(sprite, soundManager) {
+        function BoltGun(sprite, round_load_emitter_mgr, empty_round_emitter_mgr, round_removal_emitter_mgr, soundManager) {
             this.rounds = 0;
             this.maxRounds = 5;
             this.emptyRoundInChamber = false;
             this.state = BoltState.Locked;
             this.sprite = sprite;
+            this.round_load_emitter = round_load_emitter_mgr.createEmitter(Constants.TUTORIAL_LOAD_ROUND_EMIITTER_CONFIG);
+            this.empty_round_removal_emitter = empty_round_emitter_mgr.createEmitter(Constants.TUTORIAL_EMPTY_ROUND_UNLOAD_EMIITTER_CONFIG);
+            this.round_removal_emitter = round_removal_emitter_mgr.createEmitter(Constants.TUTORIAL_ROUND_UNLOAD_EMIITTER_CONFIG);
             this.sprite.setScale(2, 2);
             this.soundManager = soundManager;
         }
@@ -167,7 +154,7 @@ var Util;
                 case Global.FIRE_KEY:
                     return this.TryFire();
             }
-            return true;
+            return false;
         };
         BoltGun.prototype.TryUnlock = function () {
             if (this.state != BoltState.Locked) {
@@ -181,6 +168,14 @@ var Util;
         BoltGun.prototype.TryOpen = function () {
             if (this.state != BoltState.Unlocked) {
                 return false;
+            }
+            if (this.rounds > 0) {
+                if (this.emptyRoundInChamber) {
+                    this.empty_round_removal_emitter.explode(1, Constants.TUTORIAL_EMPTY_ROUND_UNLOAD_EMIITTER_CONFIG.x, Constants.TUTORIAL_EMPTY_ROUND_UNLOAD_EMIITTER_CONFIG.y);
+                }
+                else {
+                    this.round_removal_emitter.explode(1, Constants.TUTORIAL_ROUND_UNLOAD_EMIITTER_CONFIG.x, Constants.TUTORIAL_ROUND_UNLOAD_EMIITTER_CONFIG.y);
+                }
             }
             this.state = BoltState.Open;
             this.emptyRoundInChamber = false;
@@ -200,6 +195,7 @@ var Util;
             }
             this.rounds += 1;
             this.sprite.play(Constants.LOAD_TAG);
+            this.round_load_emitter.explode(1, Constants.TUTORIAL_LOAD_ROUND_EMIITTER_CONFIG.x, Constants.TUTORIAL_LOAD_ROUND_EMIITTER_CONFIG.y);
             this.soundManager.play(Constants.LOAD_TAG);
             return true;
         };
@@ -274,6 +270,82 @@ var Constants;
     Constants.TUTORIAL_GUN_TAG = 'JuicedRifleAnimations';
     Constants.TUTORIAL_GUN_IMG_FILE = Constants.TUTORIAL_GUN_TAG + '.png';
     Constants.TUTORIAL_GUN_JSON_FILE = Constants.TUTORIAL_GUN_TAG + '.json';
+    Constants.TUTORIAL_ROUND_TAG = 'Round';
+    Constants.TUTORIAL_ROUND_IMG_FILE = Constants.TUTORIAL_ROUND_TAG + '.png';
+    Constants.TUTORIAL_EMPTY_ROUND_TAG = 'EmptyRound';
+    Constants.TUTORIAL_EMPTY_ROUND_IMG_FILE = Constants.TUTORIAL_EMPTY_ROUND_TAG + '.png';
+    Constants.GAME_CONFIG = {
+        type: Phaser.WEBGL,
+        width: 960,
+        height: 540,
+        parent: 'game-div',
+        pixelArt: true,
+        fps: {
+            target: 20,
+            forceSetTimeOut: true
+        },
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 0 },
+                debug: false,
+                debugShowBody: true,
+                debugShowStaticBody: true
+            }
+        },
+        scene: [GameScene.MainMenu, GameScene.Tutorial]
+    };
+    Constants.TUTORIAL_LOAD_ROUND_EMIITTER_CONFIG = {
+        x: Constants.GAME_CONFIG.width / 2 + 40,
+        y: Constants.GAME_CONFIG.height / 2 - 180,
+        scaleX: 2,
+        scaleY: 2,
+        quantity: 1,
+        frequency: -1,
+        angle: { min: 90, max: 90 },
+        speed: 400,
+        lifespan: { min: 200, max: 200 }
+    };
+    Constants.TUTORIAL_ROUND_UNLOAD_EMIITTER_CONFIG = {
+        x: Constants.GAME_CONFIG.width / 2 + 35,
+        y: Constants.GAME_CONFIG.height / 2 - 130,
+        alpha: { onUpdate: function (particle, key, t, value) { if (t < 0.05) {
+                return 0;
+            }
+            else {
+                return 1;
+            } }, onEmit: function () { return 0; } },
+        delay: 100,
+        scaleX: 2,
+        scaleY: 2,
+        quantity: 1,
+        frequency: -1,
+        speed: 500,
+        angle: { min: 190, max: 230 },
+        rotate: { onUpdate: function (particle, key, t, value) { return value -= 24; }, onEmit: function () { return 0; } },
+        gravityY: 2000,
+        lifespan: 2000
+    };
+    Constants.TUTORIAL_EMPTY_ROUND_UNLOAD_EMIITTER_CONFIG = {
+        x: Constants.GAME_CONFIG.width / 2 + 35,
+        y: Constants.GAME_CONFIG.height / 2 - 130,
+        alpha: { onUpdate: function (particle, key, t, value) { if (t < 0.05) {
+                return 0;
+            }
+            else {
+                return 1;
+            } }, onEmit: function () { return 0; } },
+        delay: 100,
+        scaleX: 2,
+        scaleY: 2,
+        quantity: 1,
+        frequency: -1,
+        speed: 500,
+        angle: { min: 190, max: 230 },
+        rotate: { onUpdate: function (particle, key, t, value) { return value -= 24; }, onEmit: function () { return 0; } },
+        gravityY: 2000,
+        lifespan: 2000
+    };
 })(Constants || (Constants = {}));
 var Global;
 (function (Global) {
